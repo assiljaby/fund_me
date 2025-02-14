@@ -6,6 +6,7 @@ import {FundMe} from "../src/FundMe.sol";
 
 contract FundMeTest is Test {
     FundMe fundMe;
+
     function setUp() external {
         fundMe = new FundMe();
     }
