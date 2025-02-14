@@ -6,9 +6,10 @@ import {FundMe} from "../src/FundMe.sol";
 
 contract FundMeTest is Test {
     FundMe fundMe;
+    address price_feed_addr = 0x694AA1769357215DE4FAC081bf1f309aDC325306;
 
     function setUp() external {
-        fundMe = new FundMe();
+        fundMe = new FundMe(price_feed_addr);
     }
 
     function testMinimunDollarIsFive() public view {
