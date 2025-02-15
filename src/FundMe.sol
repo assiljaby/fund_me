@@ -7,10 +7,10 @@ import {PriceConverter} from "./PriceConverter.sol";
 contract FundMe {
     using PriceConverter for uint256;
 
-    mapping(address => uint256) public s_addressToAmountFunded;
-    address[] public s_funders;
+    mapping(address => uint256) internal s_addressToAmountFunded;
+    address[] internal s_funders;
 
-    address public immutable i_owner;
+    address internal immutable i_owner;
     uint256 public constant MINIMUM_USD = 5 * 10 ** 18;
 
     AggregatorV3Interface internal s_priceFeed;
@@ -55,5 +55,20 @@ contract FundMe {
 
     receive() external payable {
         fund();
+    }
+
+    /**
+     * view funcs
+     */
+    function getAddressToAmmountFunded(address _fundingAddress) external view returns (uint256) {
+        return s_addressToAmountFunded[_fundingAddress];
+    }
+
+    function getFunders(uint256 idx) external view returns (address) {
+        return s_funders[idx];
+    }
+
+    function getOwner() external view returns (address) {
+        return i_owner;
     }
 }
