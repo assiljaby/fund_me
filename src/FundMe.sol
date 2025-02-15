@@ -7,27 +7,27 @@ import {PriceConverter} from "./PriceConverter.sol";
 contract FundMe {
     using PriceConverter for uint256;
 
-    mapping(address => uint256) public addressToAmountFunded;
-    address[] public funders;
+    mapping(address => uint256) public s_addressToAmountFunded;
+    address[] public s_funders;
 
     address public immutable i_owner;
     uint256 public constant MINIMUM_USD = 5 * 10 ** 18;
 
-    AggregatorV3Interface internal priceFeed;
+    AggregatorV3Interface internal s_priceFeed;
 
-    constructor(address price_feed_addr) {
+    constructor(address _price_feed_addr) {
         i_owner = msg.sender;
-        priceFeed = AggregatorV3Interface(price_feed_addr);
+        s_priceFeed = AggregatorV3Interface(_price_feed_addr);
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate(priceFeed) >= MINIMUM_USD, "You need to spend more ETH!");
-        addressToAmountFunded[msg.sender] += msg.value;
-        funders.push(msg.sender);
+        require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, "You need to spend more ETH!");
+        s_addressToAmountFunded[msg.sender] += msg.value;
+        s_funders.push(msg.sender);
     }
 
     function getVersion() public view returns (uint256) {
-        return priceFeed.version();
+        return s_priceFeed.version();
     }
 
     modifier onlyOwner() {
@@ -37,12 +37,12 @@ contract FundMe {
     }
 
     function withdraw() public onlyOwner {
-        for (uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++) {
-            address funder = funders[funderIndex];
-            addressToAmountFunded[funder] = 0;
+        for (uint256 funderIndex = 0; funderIndex < s_funders.length; funderIndex++) {
+            address funder = s_funders[funderIndex];
+            s_addressToAmountFunded[funder] = 0;
         }
         // drain funds
-        funders = new address[](0);
+        s_funders = new address[](0);
 
         // cash out
         (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
