@@ -37,7 +37,14 @@ contract FundMe {
     }
 
     function withdraw() public onlyOwner {
-        for (uint256 funderIndex = 0; funderIndex < s_funders.length; funderIndex++) {
+        /**
+         * By assigning the lenght of s_funders to a local var
+         * we will spend less gas by avoiding reading from storage
+         * on each loop iteration
+         */
+        uint256 fundersLength = s_funders.length;
+
+        for (uint256 funderIndex = 0; funderIndex < fundersLength; funderIndex++) {
             address funder = s_funders[funderIndex];
             s_addressToAmountFunded[funder] = 0;
         }
