@@ -21,10 +21,7 @@ contract FundMeTest is Test {
         assertEq(fundMe.i_owner(), msg.sender);
     }
 
-    // Commenting this because it needs a forked
-    // chain to run the test
-
-    // function testPriceFeedVersionIsFour() public view {
-    //     assertEq(fundMe.getVersion(), 4);
-    // }
+    function testPriceFeedVersionIsFour() public view {
+        assertEq(fundMe.getVersion(), 4);
+    }
 }
